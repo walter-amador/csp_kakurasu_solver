@@ -41,6 +41,8 @@ def load_file():
 def reset_app():
     for widget in grid_frame.winfo_children():
         widget.destroy()
+    for widget in controls_frame.winfo_children():
+        widget.destroy()
     load_btn.config(text="Select .txt File", command=load_file)
 
 
@@ -79,6 +81,62 @@ def draw_grid(n, row_targets, col_targets):
             grid_frame, text=str(col_targets[j]), font=("Arial", 14, "bold"), fg="blue"
         ).grid(row=n + 1, column=j + 1, pady=10)
 
+    draw_controls()
+
+
+def draw_controls():
+    # Algorithm Dropdown
+    tk.Label(controls_frame, text="Algorithm:", font=("Arial", 12)).grid(
+        row=0, column=0, padx=10, pady=10
+    )
+    controls_frame.algo_var = tk.StringVar(value="Backtracking Search")
+    algo_dropdown = tk.OptionMenu(
+        controls_frame,
+        controls_frame.algo_var,
+        "Backtracking Search",
+        "AC-3 Algorithm",
+        command=lambda _: update_heuristic_dropdown(
+            controls_frame.algo_var.get(),
+            heuristic_dropdown,
+            controls_frame.heuristic_var,
+        ),
+    )
+    algo_dropdown.grid(row=0, column=1, padx=10, pady=10)
+
+    # Heuristic Dropdown (Only for Backtracking)
+    tk.Label(controls_frame, text="Heuristic:", font=("Arial", 12)).grid(
+        row=0, column=2, padx=10, pady=10
+    )
+    controls_frame.heuristic_var = tk.StringVar(value="None")
+    heuristic_dropdown = tk.OptionMenu(
+        controls_frame, controls_frame.heuristic_var, "None", "MRV", "MCV", "LCV"
+    )
+    heuristic_dropdown.grid(row=0, column=3, padx=10, pady=10)
+
+    # Execution Mode Dropdown
+    tk.Label(controls_frame, text="Execution Mode:", font=("Arial", 12)).grid(
+        row=0, column=4, padx=10, pady=10
+    )
+    controls_frame.mode_var = tk.StringVar(value="Solve")
+    mode_dropdown = tk.OptionMenu(
+        controls_frame, controls_frame.mode_var, "Solve", "Debug"
+    )
+    mode_dropdown.grid(row=0, column=5, padx=10, pady=10)
+
+    # Start Button
+    start_btn = tk.Button(
+        controls_frame, text="Start", font=("Arial", 14)
+    )
+    start_btn.grid(row=1, column=0, columnspan=6, pady=20)
+
+
+def update_heuristic_dropdown(algo, dropdown, var):
+    if algo == "Backtracking Search":
+        dropdown.config(state="normal")
+    else:
+        var.set("None")
+        dropdown.config(state="disabled")
+
 
 # Create main window
 root = tk.Tk()
@@ -100,6 +158,10 @@ load_btn.pack(anchor=tk.CENTER)
 # Frame for the grid
 grid_frame = tk.Frame(root)
 grid_frame.pack(expand=True)
+
+# Frame for the controls (dropdowns and start button)
+controls_frame = tk.Frame(root)
+controls_frame.pack(side=tk.BOTTOM, pady=40)
 
 # Run the app
 root.mainloop()
