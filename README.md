@@ -17,10 +17,6 @@ This repository contains a Python implementation of a Constraint Satisfaction Pr
    ```bash
    pip3 install -r requirements.txt
    ```
-4. Run the solver:
-   ```bash
-   python3 interface.py
-   ```
 
 ## Txt file format
 1. Row one: Number of rows and columns (e.g., `5` for a 5x5 grid).
